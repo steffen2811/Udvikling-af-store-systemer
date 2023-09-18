@@ -1,8 +1,8 @@
-﻿using static Project_case.Parking.ParkingStore;
+﻿using static ParkingRegistration.Parking.ParkingStore;
 using System.Linq;
 using CarTypeService.Models;
 
-namespace Project_case.Parking
+namespace ParkingRegistration.Parking
 {
     public interface IParkingStore
     {

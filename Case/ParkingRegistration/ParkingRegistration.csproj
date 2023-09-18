@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Project_case</RootNamespace>
+    <RootNamespace>ParkingRegistration</RootNamespace>
     <UserSecretsId>64054e25-11bc-4e54-9362-1eb8d169a2ad</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>

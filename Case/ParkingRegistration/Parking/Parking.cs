@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Project_case.Parking
+namespace ParkingRegistration.Parking
 {
     public class Parking
     {

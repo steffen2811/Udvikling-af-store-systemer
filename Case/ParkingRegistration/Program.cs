@@ -1,7 +1,7 @@
 using CarTypeService.Services;
 using Microsoft.AspNetCore.Hosting;
 using Polly;
-using Project_case.Parking;
+using ParkingRegistration.Parking;
 
 var builder = WebApplication.CreateBuilder(args);
 

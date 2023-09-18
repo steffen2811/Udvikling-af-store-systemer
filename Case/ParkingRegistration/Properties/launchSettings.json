@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Project_case": {
+    "ParkingRegistration": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",

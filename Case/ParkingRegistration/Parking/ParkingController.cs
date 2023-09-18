@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using static Project_case.Parking.ParkingStore;
+using static ParkingRegistration.Parking.ParkingStore;
 using Microsoft.AspNetCore.Http;
 using CarTypeService.Services;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 
-namespace Project_case.Parking
+namespace ParkingRegistration.Parking
 {
     [Route("/parking")]
     public class ParkingController : ControllerBase
