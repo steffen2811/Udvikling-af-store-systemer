@@ -15,21 +15,31 @@ namespace Project_case.Parking
             this.parkingStore = parkingStore;
         }
 
-        [HttpGet("{licensePlate}")]
-        public Parking Get(string licensePlate) => this.parkingStore.Get(licensePlate);
+        [HttpGet("Parkings/{licensePlate}")]
+        public List<Parking> GetAll(string licensePlate) => this.parkingStore.GetAllParkings(licensePlate);
+        
+        [HttpGet("ActiveParking/{licensePlate}")]
+        public Parking GetActive(string licensePlate) => this.parkingStore.GetActiveParking(licensePlate);
 
         [HttpPost("RegisterParking")]
-        public Parking Post([FromBody] Parking parking)
+        public IActionResult RegisterParking([FromBody] Parking parking)
         {
-            this.parkingStore.Save(parking);
-            return parking;
+            bool result = this.parkingStore.RegisterParking(parking);
+            return result ? StatusCode(200) : StatusCode(406, "Licenseplate is already registered.");
+        }
+
+        [HttpPost("EndParking/{licensePlate}")]
+        public IActionResult RegisterParking(string licensePlate)
+        {
+            bool result = this.parkingStore.EndParking(licensePlate);
+            return result ? StatusCode(200) : StatusCode(406, "No active parking found");
         }
 
         [HttpDelete("DeleteAllParking/{licensePlate}")]
         public IActionResult Delete(string licensePlate)
         {
             this.parkingStore.DeleteAll(licensePlate);
-            return new NoContentResult();
+            return StatusCode(200);
         }
     }
 }

@@ -1,12 +1,16 @@
 ﻿using static Project_case.Parking.ParkingStore;
+using System.Linq;
 
 namespace Project_case.Parking
 {
     public interface IParkingStore
     {
-        Parking Get(string licensePlate);
-        void Save(Parking Parking);
+        List<Parking> GetAllParkings(string licensePlate);
+        bool RegisterParking(Parking Parking);
         void DeleteAll(string licensePlate);
+        public Parking GetActiveParking(string licensePlate);
+        bool EndParking(string licensePlate);
+
     }
 
     public class ParkingStore : IParkingStore
@@ -14,14 +18,37 @@ namespace Project_case.Parking
         private static readonly Dictionary<int, Parking> Database = new Dictionary<int, Parking>();
         private static int ParkingId = 0;
 
-        public Parking Get(string licensePlate)
+        public List<Parking> GetAllParkings(string licensePlate)
         {
-            return Database.FirstOrDefault(x => x.Value.LicensePlate == licensePlate).Value;
+           return Database.Values.Where(p => p.LicensePlate == licensePlate).ToList();
         }
 
-        public void Save(Parking parking)
+        public Parking GetActiveParking(string licensePlate)
         {
-            Database[ParkingId++] = parking;
+            return Database.FirstOrDefault(x => (x.Value.LicensePlate == licensePlate) && (x.Value.IsActive)).Value;
+        }
+
+        public bool RegisterParking(Parking parking)
+        {
+            if (GetActiveParking(parking.LicensePlate) == null) 
+            { 
+                Database[ParkingId++] = parking;
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public bool EndParking(string licensePlate)
+        {
+            Parking parking = GetActiveParking(licensePlate);
+            if (parking != null)
+            {
+                parking.EndParking();
+                return true;
+            }
+            else
+                return false;
         }
 
         public void DeleteAll(string licensePlate)
