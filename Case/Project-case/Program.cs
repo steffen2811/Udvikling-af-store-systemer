@@ -1,4 +1,6 @@
+using CarTypeService.Services;
 using Microsoft.AspNetCore.Hosting;
+using Polly;
 using Project_case.Parking;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,13 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddHttpClient<IMotorApiService, MotorApiService>()
+    .AddTransientHttpErrorPolicy(
+    p => p.WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(1000 * Math.Pow(2, attempt))));
+
 builder.Services.Scan(selector => selector
     .FromAssemblyOf<IParkingStore>()
     .AddClasses()
     .AsImplementedInterfaces());
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 

@@ -1,12 +1,13 @@
 ﻿using static Project_case.Parking.ParkingStore;
 using System.Linq;
+using CarTypeService.Models;
 
 namespace Project_case.Parking
 {
     public interface IParkingStore
     {
         List<Parking> GetAllParkings(string licensePlate);
-        bool RegisterParking(Parking Parking);
+        bool RegisterParking(Parking parking);
         void DeleteAll(string licensePlate);
         public Parking GetActiveParking(string licensePlate);
         bool EndParking(string licensePlate);

@@ -2,6 +2,9 @@
 using System.Net;
 using static Project_case.Parking.ParkingStore;
 using Microsoft.AspNetCore.Http;
+using CarTypeService.Services;
+using Microsoft.Extensions.Configuration;
+using System.Net.Http;
 
 namespace Project_case.Parking
 {
@@ -9,10 +12,13 @@ namespace Project_case.Parking
     public class ParkingController : ControllerBase
     {
         private readonly IParkingStore parkingStore;
+        private readonly IMotorApiService motorApiService;
 
-        public ParkingController(IParkingStore parkingStore)
+        public ParkingController(IParkingStore parkingStore, 
+            IMotorApiService motorApiService)
         {
             this.parkingStore = parkingStore;
+            this.motorApiService = motorApiService;
         }
 
         [HttpGet("Parkings/{licensePlate}")]
@@ -22,8 +28,10 @@ namespace Project_case.Parking
         public Parking GetActive(string licensePlate) => this.parkingStore.GetActiveParking(licensePlate);
 
         [HttpPost("RegisterParking")]
-        public IActionResult RegisterParking([FromBody] Parking parking)
+        public async Task<IActionResult> RegisterParking([FromBody] Parking parking)
         {
+            var carDescription = await motorApiService.GetDescriptionAsync(parking.LicensePlate);
+            parking.SetCarDescription(carDescription);
             bool result = this.parkingStore.RegisterParking(parking);
             return result ? StatusCode(200) : StatusCode(406, "Licenseplate is already registered.");
         }
