@@ -2,6 +2,7 @@ using CarTypeService.Services;
 using Microsoft.AspNetCore.Hosting;
 using Polly;
 using ParkingRegistration.Parking;
+using ParkingRegistration.EventFeed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddScoped<IEventStore, EventStore>();
+
 builder.Services.AddHttpClient<IMotorApiService, MotorApiService>()
     .AddTransientHttpErrorPolicy(
     p => p.WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(1000 * Math.Pow(2, attempt))));

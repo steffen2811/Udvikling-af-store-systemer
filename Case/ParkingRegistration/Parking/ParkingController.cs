@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using CarTypeService.Services;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
+using ParkingRegistration.EventFeed;
 
 namespace ParkingRegistration.Parking
 {
@@ -13,12 +14,15 @@ namespace ParkingRegistration.Parking
     {
         private readonly IParkingStore parkingStore;
         private readonly IMotorApiService motorApiService;
+        private readonly IEventStore eventStore;
 
         public ParkingController(IParkingStore parkingStore, 
-            IMotorApiService motorApiService)
+            IMotorApiService motorApiService,
+            IEventStore eventStore)
         {
             this.parkingStore = parkingStore;
             this.motorApiService = motorApiService;
+            this.eventStore = eventStore;
         }
 
         [HttpGet("Parkings/{licensePlate}")]
@@ -33,6 +37,8 @@ namespace ParkingRegistration.Parking
             var carDescription = await motorApiService.GetDescriptionAsync(parking.LicensePlate);
             parking.SetCarDescription(carDescription);
             bool result = this.parkingStore.RegisterParking(parking);
+            if (result)
+                eventStore.Raise("New registration", parking);
             return result ? StatusCode(200) : StatusCode(406, "Licenseplate is already registered.");
         }
 
