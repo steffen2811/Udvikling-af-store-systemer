@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Newtonsoft.Json;
+using System.Reflection;
+using Microsoft.Extensions.Configuration;
 
 namespace EmailWorkerService
 {
@@ -22,11 +24,13 @@ namespace EmailWorkerService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            int nextEventIndex = 0;
+            var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+            int nextEventIndex = 1;
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                string key = "qMTJzZtnKGD4c0LgyYHyepoT7VdFOir1Wig9yrU6LeQLAzFuCJeiWw==";
+                string key = config["EmailApiKey"];
                 string url = $"https://twilioproxy.azurewebsites.net/api/SendEmail?code={key}";
 
                 using (var c = _httpClientFactory.CreateClient())
