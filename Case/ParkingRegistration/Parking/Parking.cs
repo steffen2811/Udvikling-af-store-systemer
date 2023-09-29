@@ -9,9 +9,9 @@ namespace ParkingRegistration.Parking
         public string LicensePlate { get; set; }
         public DateTime TimeStart { get; private set; } = DateTime.Now;
         [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [DataType(DataType.PhoneNumber)]
-        public string Phone { get; set; }
+        public string?   Phone { get; set; }
         public ParkingSpot parkingSpot { get; set; }
         public bool IsActive { get; private set; } = true;
         public DateTime TimeEnd { get; private set; }
