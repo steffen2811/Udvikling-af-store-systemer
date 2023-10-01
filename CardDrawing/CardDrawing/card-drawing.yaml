@@ -1,0 +1,33 @@
+﻿﻿kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: carddrawing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: carddrawing
+  template:
+    metadata:
+      labels:
+        app: carddrawing
+    spec:
+      containers:
+        - name: carddrawing
+          image: carddrawing
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: carddrawing
+spec:
+  type: LoadBalancer
+  ports:
+    - name: carddrawing
+      port: 5000
+      targetPort: 80
+  selector:
+    app: carddrawing

@@ -26,24 +26,24 @@ namespace EventService.handlers
                 {
                     string phone = item.content.phone;
                     string email = item.content.email;
-                    string subject = $"New parking {item.content.licenseplate}";
-                    string message = $"Car with licenseplate {item.content.licenseplate} has been parked at {item.content.timestart}";
+                    string subject = $"New parking {item.content.licensePlate}";
+                    string message = $"Car with licenseplate {item.content.licensePlate} has been parked at {item.content.timeStart}";
                     c.DefaultRequestHeaders.Accept.Clear();
                     c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                     logger.LogInformation(message);
 
-                    if (phone != null)
+                    if (phone != "")
                     {
-                        Sms body = new Sms(email, message);
-                        var result = await c.PostAsJsonAsync($"https://localhost:7186/sms", body);
+                        Sms body = new Sms(phone, message);
+                        var result = await c.PostAsJsonAsync($"https://localhost:7002/sms", body);
                         logger.LogInformation($"SMS response: {result.StatusCode}");
                     }
 
-                    if (email != null)
+                    if (email != "")
                     {
                         Email body = new Email(email, subject, message);
-                        var result = await c.PostAsJsonAsync($"https://localhost:7186/email", body);
+                        var result = await c.PostAsJsonAsync($"https://localhost:7173/email", body);
                         logger.LogInformation($"Email response: {result.StatusCode}");
                     }
                     nextEventIndex++;
