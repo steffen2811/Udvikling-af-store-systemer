@@ -1,0 +1,40 @@
+services:
+  parking_registration:
+    build: ./ParkingRegistration
+    ports:
+      - "80:80"
+    networks:
+      - local
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - $APPDATA/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+  email_service:
+    build: ./EmailService
+    networks:
+      - local
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - $APPDATA/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      
+  sms_service:
+    build: ./SmsService
+    networks:
+      - local
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - $APPDATA/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      
+  event_service:
+    build: ./EventService
+    depends_on:
+      - parking_registration
+    networks:
+      - local
+
+networks:
+  local:
+    driver: bridge
