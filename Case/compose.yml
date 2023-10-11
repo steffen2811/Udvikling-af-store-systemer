@@ -34,6 +34,27 @@ services:
       - parking_registration
     networks:
       - local
+      
+  parking_control_service:
+    build: ./ParkingControlService
+    ports:
+      - "8080:80"
+    depends_on:
+      - parking_registration
+      - plate_recognizer_service
+    networks:
+      - local
+
+  plate_recognizer_service:
+    build: ./PlateRecognizerService
+    depends_on:
+      - parking_registration
+    networks:
+      - local
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - $APPDATA/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
 networks:
   local:
