@@ -18,7 +18,7 @@ namespace EventService.handlers
         {
             using (var c = httpClientFactory.CreateClient())
             {
-                var response = await c.GetAsync($"http://parking_registration/events?start={nextEventIndex}");
+                var response = await c.GetAsync($"http://parking-registration/events?start={nextEventIndex}");
                 string events = await response.Content.ReadAsStringAsync();
 
                 dynamic json = JsonConvert.DeserializeObject(events);
@@ -36,14 +36,14 @@ namespace EventService.handlers
                     if (phone != "")
                     {
                         Sms body = new Sms(phone, message);
-                        var result = await c.PostAsJsonAsync($"http://sms_service/sms", body);
+                        var result = await c.PostAsJsonAsync($"http://sms-service/sms", body);
                         logger.LogInformation($"SMS response: {result.StatusCode}");
                     }
 
                     if (email != "")
                     {
                         Email body = new Email(email, subject, message);
-                        var result = await c.PostAsJsonAsync($"http://email_service/email", body);
+                        var result = await c.PostAsJsonAsync($"http://email-service/email", body);
                         logger.LogInformation($"Email response: {result.StatusCode}");
                     }
                     nextEventIndex++;

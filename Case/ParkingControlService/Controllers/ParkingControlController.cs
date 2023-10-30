@@ -36,13 +36,13 @@ namespace ParkingControlService.Controllers
                 {
                     image = base64String,
                 };
-                var result = await c.PostAsJsonAsync($"http://plate_recognizer_service/PlateRecognizer", base64String);
+                var result = await c.PostAsJsonAsync($"http://plate-recognizer-service/PlateRecognizer", base64String);
                 var content = result.Content.ReadAsStringAsync();
                 LicensePlate licensePlate = Newtonsoft.Json.JsonConvert.DeserializeObject<LicensePlate>(content.Result);
 
                 if ((licensePlate != null) && (licensePlate.score < 80))
                 {
-                    HttpResponseMessage parkingResponse = c.GetAsync($"http://parking_registration/parking/ActiveParking/{licensePlate.plate}").Result;
+                    HttpResponseMessage parkingResponse = c.GetAsync($"http://parking-registration/parking/ActiveParking/{licensePlate.plate}").Result;
                     if (parkingResponse.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         var parkingResponseInfo = parkingResponse.Content.ReadAsStringAsync();
