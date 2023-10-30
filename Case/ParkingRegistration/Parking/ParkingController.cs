@@ -10,7 +10,7 @@ using ParkingRegistration.EventFeed;
 namespace ParkingRegistration.Parking
 {
     [Route("/parking")]
-    public class ParkingController : ControllerBase
+    public class ParkingController : ControllerBase, IParkingController
     {
         private readonly IParkingStore parkingStore;
         private readonly IMotorApiService motorApiService;
