@@ -6,11 +6,18 @@ namespace ParkingRegistration.EventFeed
     public class EventFeedController : Controller
     {
         private readonly IEventStore eventStore;
+        private const int MAX_COUNT = 4096;
 
         public EventFeedController(IEventStore eventStore) => this.eventStore = eventStore;
 
         [HttpGet("")]
-        public Event[] Get([FromQuery] long start, [FromQuery] long end = long.MaxValue) =>
-          this.eventStore.GetEvents(start, end).ToArray();
+        public async Task<Event[]> Get([FromQuery] int start, [FromQuery] int count = MAX_COUNT)
+        {
+            if (count > MAX_COUNT)
+                count = MAX_COUNT;
+
+            IEnumerable<Event> returnEvents = await eventStore.GetEvents(start, count, typeof(Parking.Parking));
+            return returnEvents.ToArray();
+        }
     }
 }

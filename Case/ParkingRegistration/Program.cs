@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Polly;
 using ParkingRegistration.Parking;
 using ParkingRegistration.EventFeed;
+using EventStore.ClientAPI;
+using EventStore.ClientAPI.SystemData;
+using System.Data.Common;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +18,25 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
-builder.Services.AddScoped<IEventStore, EventStore>();
+
+builder.Services.AddSingleton<IEventStoreConnection>(sp =>
+{
+    var settings = ConnectionSettings
+        .Create()
+        .KeepReconnecting()
+        .Build();
+    var connection = EventStoreConnection.Create(
+        "ConnectTo=tcp://eventstore:1113; UseSslConnection=false;"
+    );
+    //connection = EventStoreConnection.Create(
+    //new IPEndPoint(
+    //    IPAddress.Parse("127.0.0.1"),
+    //    1113
+    //));
+
+    connection.ConnectAsync().Wait(); // Wait for the connection to be established
+    return connection;
+});
 
 builder.Services.AddHttpClient<IMotorApiService, MotorApiService>()
     .AddTransientHttpErrorPolicy(

@@ -7,11 +7,17 @@ services:
       - EVENTSTORE_START_STANDARD_PROJECTIONS=true
       - EVENTSTORE_EXT_TCP_PORT=1113
       - EVENTSTORE_EXT_HTTP_PORT=2113
-      - EVENTSTORE_INSECURE=true
       - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+      - EVENTSTORE_INSECURE=true
+      - EVENTSTORE_EXT_SECURE_TCP_PORT=1115
+      - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
+    networks:
+      - local
     ports:
       - "1113:1113"
+      - "1115:1115"
       - "2113:2113"
+
 
   parking-registration:
     build: ./ParkingRegistration

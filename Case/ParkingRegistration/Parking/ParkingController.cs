@@ -38,7 +38,7 @@ namespace ParkingRegistration.Parking
             parking.SetCarDescription(carDescription);
             bool result = this.parkingStore.RegisterParking(parking);
             if (result)
-                eventStore.Raise("New registration", parking);
+                eventStore.Raise("parking", parking);
             return result ? StatusCode(200) : StatusCode(406, "Licenseplate is already registered.");
         }
 
