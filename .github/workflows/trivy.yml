@@ -31,17 +31,25 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          cd Case; docker-compose build
+           cd Case/EmailService; docker build -t docker.io/my-organization/my-app_1:${{ github.sha }} .
+           cd Case/EventService; docker build -t docker.io/my-organization/my-app_2:${{ github.sha }} .
 
-      - name: Run Trivy vulnerability scanner
+      - name: Run Trivy vulnerability scanner app1
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+          image-ref: 'docker.io/my-organization/my-app_1:${{ github.sha }}'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
-
+      - name: Run Trivy vulnerability scanner app2
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'docker.io/my-organization/my-app_2:${{ github.sha }}'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
